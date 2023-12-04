@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 def count_inversions(arr):
     if len(arr) <= 1:
         return arr, 0
