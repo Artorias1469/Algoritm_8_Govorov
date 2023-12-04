@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-
 def count_inversions(arr):
     if len(arr) <= 1:
         return arr, 0
@@ -20,7 +19,8 @@ def merge_and_count(left, right):
     inversions = 0
     i = j = 0
 
-    while i < len(left) and j < len(right):
+    def merge():
+        nonlocal i, j, inversions
         if left[i] <= right[j]:
             merged.append(left[i])
             i += 1
@@ -29,8 +29,15 @@ def merge_and_count(left, right):
             inversions += len(left) - i
             j += 1
 
-    merged.extend(left[i:])
-    merged.extend(right[j:])
+    def merge_remaining():
+        nonlocal i, j
+        merged.extend(left[i:])
+        merged.extend(right[j:])
+
+    while i < len(left) and j < len(right):
+        merge()
+
+    merge_remaining()
 
     return merged, inversions
 
