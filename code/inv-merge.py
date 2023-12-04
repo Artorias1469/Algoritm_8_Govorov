@@ -9,18 +9,36 @@ def count_inversions(arr):
     left, inv_left = count_inversions(arr[:mid])
     right, inv_right = count_inversions(arr[mid:])
 
-    merged, inv_merge = merge_and_count(left, right, 0, 0, [])
+    merged, inv_merge = merge_and_count(left, right)
 
     return merged, inv_left + inv_right + inv_merge
 
-def merge_and_count(left, right, i, j, merged):
-    if i < len(left) and j < len(right):
+def merge_and_count(left, right):
+    merged = []
+    inversions = 0
+    i = j = 0
+
+    def merge():
+        nonlocal i, j, inversions
         if left[i] <= right[j]:
-            return merge_and_count(left, right, i + 1, j, merged + [left[i]])
+            merged.append(left[i])
+            i += 1
         else:
-            return merge_and_count(left, right, i, j + 1, merged + [right[j]]) + (len(left) - i,)
-    else:
-        return merged + left[i:] + right[j:], 0
+            merged.append(right[j])
+            inversions += len(left) - i
+            j += 1
+
+    def merge_remaining():
+        nonlocal i, j
+        merged.extend(left[i:])
+        merged.extend(right[j:])
+
+    while i < len(left) and j < len(right):
+        merge()
+
+    merge_remaining()
+
+    return merged, inversions
 
 if __name__ == "__main__":
     arr = [1, 3, 5, 2, 4, 6]
